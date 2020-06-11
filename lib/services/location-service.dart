@@ -17,6 +17,7 @@ class LocationService with ChangeNotifier {
   Stream<String> get speedStream => _speedController.stream;
 
   LocationService() {
+    _location.changeSettings(accuracy: LocationAccuracy.navigation);
     _location.requestPermission().then((PermissionStatus permissionStatus) {
       if (permissionStatus == PermissionStatus.granted) {
         _location.onLocationChanged.listen((LocationData locationData) {
