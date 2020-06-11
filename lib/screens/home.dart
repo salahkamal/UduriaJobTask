@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
-  int i = 0;
   @override
   Widget build(BuildContext context) {
     var mySpeed = Provider.of<String>(context);
