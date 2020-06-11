@@ -17,14 +17,10 @@ class LocationService with ChangeNotifier {
   Stream<String> get speedStream => _speedController.stream;
 
   LocationService() {
-    _location.changeSettings(accuracy: LocationAccuracy.navigation);
     _location.requestPermission().then((PermissionStatus permissionStatus) {
       if (permissionStatus == PermissionStatus.granted) {
-        _location.onLocationChanged.handleError((dynamic err) {
-          _speedController.add(err.toString());
-        }).listen((LocationData locationData) {
+        _location.onLocationChanged.listen((LocationData locationData) {
           _speedController.add((locationData.speed * 3.6).toInt().toString());
-          // print((locationData.time));
           if (accelerate) {
             whenAccelerate(locationData);
           } else {
@@ -36,12 +32,12 @@ class LocationService with ChangeNotifier {
   }
 
   void whenAccelerate(LocationData locationData) {
-    if ((locationData.speed * 3.6) >= 60.0 &&
-        (locationData.speed * 3.6) <= 100) {
+    if ((locationData.speed * 3.6) >= 10 &&
+        (locationData.speed * 3.6) <= 30) {
       times.add(locationData.time);
-    } else if ((locationData.speed * 3.6) < 60.0 && times.isNotEmpty) {
+    } else if ((locationData.speed * 3.6) < 10.0 && times.isNotEmpty) {
       times.clear();
-    } else if ((locationData.speed * 3.6) > 100.0 && times.isNotEmpty) {
+    } else if ((locationData.speed * 3.6) > 30.0 && times.isNotEmpty) {
       print(times.first.toString() + "  " + times.last.toString());
       accTime = null;
       calcTime(times);
@@ -51,12 +47,12 @@ class LocationService with ChangeNotifier {
   }
 
   void whenDeclerate(LocationData locationData) {
-    if ((locationData.speed * 3.6) >= 60.0 &&
-        (locationData.speed * 3.6) <= 100) {
+    if ((locationData.speed * 3.6) >= 10.0 &&
+        (locationData.speed * 3.6) <= 30) {
       times.add(locationData.time);
-    } else if ((locationData.speed * 3.6) > 100.0 && times.isNotEmpty) {
+    } else if ((locationData.speed * 3.6) > 30.0 && times.isNotEmpty) {
       times.clear();
-    } else if ((locationData.speed * 3.6) < 60.0 && times.isNotEmpty) {
+    } else if ((locationData.speed * 3.6) < 10.0 && times.isNotEmpty) {
       print(times.first.toString() + "  " + times.last.toString());
       decTime = null;
       calcTime(times);
