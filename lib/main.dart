@@ -17,8 +17,14 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: StreamProvider<String>(
-        create: (BuildContext context) => LocationService().speedStream,
+      home: MultiProvider(
+        providers: [
+          StreamProvider<String>(
+            create: (BuildContext context) => LocationService().speedStream,
+          ),
+          ChangeNotifierProvider<LocationService>(
+              create: (context) => LocationService())
+        ],
         child: Home(),
       ),
     );
